@@ -7,8 +7,8 @@ const usePrivateRequest = () => {
   useEffect(() => {
     const requestInterceptor = privateRequest.interceptors.request.use(
       (config) => {
-        if (!config.headers["token"]) {
-          config.headers["token"] = `Bearer ${auth?.access_token}`;
+        if (!config.headers["Authorization"]) {
+          config.headers["Authorization"] = `Bearer ${auth?.access_token}`;
         }
         return config;
       },

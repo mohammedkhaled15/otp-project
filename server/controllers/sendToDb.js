@@ -2,7 +2,6 @@ const User = require("../models/user");
 
 const sendToDb = async (req, res) => {
   const userData = req?.body;
-  console.log(req.body);
   try {
     const alreadyExistUser = await User.findOne({
       telephone: userData.telephone,
