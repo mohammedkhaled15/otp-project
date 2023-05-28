@@ -2,28 +2,39 @@ import axios from "axios"
 import { useContext } from "react"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
+import LoginAuthContext from "../context/LoginAuthProvider"
 
 
 const Login = () => {
+  const navigate = useNavigate();
 
-  const { handleChange, data, baseUrl } = useContext(AppContext)
+  const { handleChange, baseUrl, data } = useContext(AppContext)
 
-  const navigate = useNavigate()
+  const { setAuth } = useContext(LoginAuthContext);
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      const res = await axios.post(`${baseUrl}/api/login`, {
-        ...data
-      })
-      if (res.status === 200) {
-        navigate("/otp")
+  const handleValidate = async (e) => {
+    e.preventDefault();
+
+    // Validate the phone number using regex for KSA format
+    const isValidNumber = /^05[0-9]{8}$/.test(data.telephone);
+
+    if (isValidNumber) {
+      try {
+        // setLoading(false);
+        const response = await axios.post(`${baseUrl}/api/login`, { telephone: data.telephone })
+        console.log('API Response:', response);
+        setAuth({ phoneNumber: data.telephone });
+        navigate('/otp', { state: { telephone: data.telephone } });
+
+      } catch (error) {
+        // Handle API errors
+        console.log('API Error:', error);
       }
-      console.log(res)
-    } catch (error) {
-      console.log(error)
+    } else {
+      // Handle validation error for incorrect phone number format
+      console.log('Invalid phone number format');
     }
-  }
+  };
 
   return (
     <div className="container">
@@ -41,7 +52,7 @@ const Login = () => {
           />
         </div>
         <div className="actions">
-          <button className="btn btn--form" type="submit" onClick={(e) => handleLogin(e)} value="Log in">
+          <button className="btn btn--form" type="submit" onClick={(e) => handleValidate(e)} value="Log in">
             Log in
           </button>
         </div>

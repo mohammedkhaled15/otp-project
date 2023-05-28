@@ -1,12 +1,31 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
+import LoginAuthContext from "../context/LoginAuthProvider"
 
 const CheckOtp = () => {
 
-  const { handleChange, data, currentUser, baseUrl, setCurrentUser } = useContext(AppContext)
+  const { handleChange, data, baseUrl, setCurrentUser } = useContext(AppContext)
+  const { setAuth, auth } = useContext(LoginAuthContext);
+
+  const [timer, setTimer] = useState(6)
+  const [disabled, setDisabled] = useState(true)
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(prev => prev - 1)
+    }, 1000)
+
+    if (timer === 0) {
+      setDisabled(false)
+      clearInterval(interval)
+    }
+    return () => clearInterval(interval)
+
+  }, [timer])
 
   const navigate = useNavigate()
 
@@ -14,13 +33,21 @@ const CheckOtp = () => {
     e.preventDefault()
     try {
       const res = await axios.post(`${baseUrl}/api/login`, {
-        telephone: data.telephone
+        ...data
       })
+      if (res.code === 200) {
+        const interval = setInterval(() => {
+          setTimer(prev => prev - 1)
+        }, 1000)
+        if (timer === 0) {
+          setDisabled(false)
+          clearInterval(interval)
+        }
+      }
     } catch (error) {
       console.log(error)
     }
   }
-
 
   const handleFullLogin = async (e) => {
     e.preventDefault()
@@ -28,12 +55,21 @@ const CheckOtp = () => {
       const res = await axios.post(`${baseUrl}/api/check/code`, {
         ...data
       })
-      console.log(res)
+      const accessToken = res.data.data.access_token;
+      console.log(accessToken)
+      setAuth({ ...res.data.data })
+      const tokenMatch = document.cookie.match(/access_token=([^;]+)/);
+      if (!tokenMatch) {
+        const now = new Date();
+        now.setTime(now.getTime() + 24 * 60 * 60 * 1000); // Expiration time , should be weeks i will edit later
+        document.cookie = `access_token=${accessToken}; expires=${now.toUTCString()}; httpOnly: true`;
+      }
+      navigate('/profile');
+      // console.log(res)
       if (res.status === 200) {
         setCurrentUser({ ...res.data.data })
         navigate("/profile")
       }
-      console.log(currentUser)
     } catch (error) {
       console.log(error)
     }
@@ -55,8 +91,8 @@ const CheckOtp = () => {
           />
         </div>
         <div className="actions">
-          <button className="btn btn--form" onClick={(e) => handleGetOtp(e)} type="submit" value="Log in">
-            Get Another Otp
+          <button className={`btn btn--form ${disabled ? "disabled" : ""}`} onClick={(e) => handleGetOtp(e)} type="submit" value="Log in">
+            Get Another Otp after  <span style={{ visibility: disabled ? "visible" : "hidden" }}> {timer}</span>
           </button>
           <button className="btn btn--form" onClick={(e) => handleFullLogin(e)} type="submit">
             Proceed

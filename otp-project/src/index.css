@@ -104,3 +104,13 @@ button {
   justify-content: space-evenly;
   align-items: center;
 }
+.disabled {
+  cursor: not-allowed;
+  background-color: #eee;
+  color: #363535;
+}
+.disabled:hover {
+  cursor: not-allowed;
+  background-color: #eee;
+  color: #363535;
+}
