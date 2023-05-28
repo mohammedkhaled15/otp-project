@@ -8,7 +8,7 @@ const sendToDb = async (req, res) => {
       telephone: userData.telephone,
     });
     if (!alreadyExistUser) {
-      await User.create(userData);
+      await User.create({ ...userData });
       return res.status(201).json({ message: `New User Data Created` });
     } else {
       await User.findByIdAndUpdate(

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { publicRequest } from "../requests/requestMethods"
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../App"
@@ -55,6 +56,8 @@ const CheckOtp = () => {
       const res = await axios.post(`${baseUrl}/api/check/code`, {
         ...data
       })
+      console.log(res)
+      const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { ...res?.data?.data })
       const accessToken = res.data.data.access_token;
       console.log(accessToken)
       setAuth({ ...res.data.data })
