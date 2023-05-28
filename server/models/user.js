@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema(
   {
     telephone: { type: String, required: true },
-    topScore: { type: Number, default: 0 },
+    code: { type: Number },
+    refreshToken: { type: String },
   },
   { timestamps: true }
 );

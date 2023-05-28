@@ -11,8 +11,8 @@ const Login = () => {
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
+    e.preventDefault()
     try {
-      e.preventDefault()
       const res = await axios.post(`${baseUrl}/api/login`, {
         ...data
       })
