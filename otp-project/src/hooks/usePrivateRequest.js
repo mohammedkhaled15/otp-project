@@ -3,6 +3,7 @@ import { privateRequest } from "../requests/requestMethods";
 import { useNavigate } from "react-router-dom";
 import LoginAuthContext from "../context/LoginAuthProvider";
 import setCookies from "../utils/setCookies";
+import axios from "axios";
 
 const usePrivateRequest = () => {
   const { auth, setAuth } = useContext(LoginAuthContext);
@@ -31,21 +32,21 @@ const usePrivateRequest = () => {
 
           // 1st senario set access_token cookie to undefined through this request
           // the navigate to login page to obtain a new access token
-          setCookies(null, -1000);
-          setAuth({});
-          navigate("/");
-          console.log("logging Out");
+          // setCookies(null, -1000);
+          // setAuth({});
+          // navigate("/");
+          // console.log("logging Out");
 
           // 2nd senario create new jwt and update the db and cokies with it through this request
-          // const res = await axios.post("http://localhost:5000/api/createjwt", {
-          //   ...auth,
-          // });
-          // setAuth({ ...auth, access_token: res.data.access_token });
-          // console.log("NewAccessToken: ", res.data.access_token);
-          // prevRequest.headers[
-          //   "Authorization"
-          // ] = `Bearer ${res.data.access_token}`;
-          // return privateRequest(prevRequest);
+          const res = await axios.post("http://localhost:5000/api/createjwt", {
+            ...auth,
+          });
+          setAuth({ ...auth, access_token: res.data.access_token });
+          console.log("NewAccessToken: ", res.data.access_token);
+          prevRequest.headers[
+            "Authorization"
+          ] = `Bearer ${res.data.access_token}`;
+          return privateRequest(prevRequest);
         }
         return Promise.reject(err);
       }

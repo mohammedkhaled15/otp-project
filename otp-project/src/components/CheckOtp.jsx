@@ -57,19 +57,19 @@ const CheckOtp = () => {
       const res = await publicRequest.post(`/check/code`, {
         ...data
       })
-      const { access_token, name, telephone } = res.data.data
-      // console.log(res)
-      const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { access_token, name, telephone })
-      const accessToken = res.data.data.access_token;
-      // console.log(accessToken)
-      setAuth({ ...res.data.data })
-      const tokenMatch = document.cookie.match(/access_token=([^;]+)/);
-      if (!tokenMatch) {
-        setCookies(accessToken, 24 * 60 * 60 * 1000)
-      }
       if (res.status === 200) {
+        const { access_token, name, telephone } = res.data.data
+        const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { access_token, name, telephone })
+        const accessToken = res.data.data.access_token;
+        setAuth({ ...res.data.data })
+        const tokenMatch = document.cookie.match(/access_token=([^;]+)/);
+        if (!tokenMatch) {
+          setCookies(accessToken, 24 * 60 * 60 * 1000)
+        }
         navigate("/profile")
       }
+      // console.log(res)
+      // console.log(accessToken)
     } catch (error) {
       console.log(error)
     }
