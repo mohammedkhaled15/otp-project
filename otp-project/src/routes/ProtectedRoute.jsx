@@ -1,6 +1,5 @@
 import { useLocation, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
-import LoginAuthContext from '../context/LoginAuthProvider';
+import { useEffect } from 'react';
 import useLoginAuth from '../hooks/useLoginAuth';
 
 const ProtectedRoute = () => {
@@ -16,7 +15,7 @@ const ProtectedRoute = () => {
     if (accessToken && location.pathname === '/') {
       navigate('/profile', { replace: true });
     }
-  }, [accessToken]);
+  }, [accessToken, location.pathname, navigate]);
 
   if (
     location.pathname === '/otp' ||

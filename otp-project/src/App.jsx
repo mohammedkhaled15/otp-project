@@ -18,6 +18,8 @@ const App = () => {
     .find((row) => row.startsWith('access_token='))
     ?.split('=')[1];
 
+  // console.log(accessToken)
+
   const [data, setData] = useState({})
   const [currentUser, setCurrentUser] = useState("")
 

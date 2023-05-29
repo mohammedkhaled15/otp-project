@@ -56,8 +56,9 @@ const CheckOtp = () => {
       const res = await axios.post(`${baseUrl}/api/check/code`, {
         ...data
       })
+      const { access_token, name, telephone } = res.data.data
       console.log(res)
-      const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { ...res?.data?.data })
+      const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { access_token, name, telephone })
       const accessToken = res.data.data.access_token;
       console.log(accessToken)
       setAuth({ ...res.data.data })
