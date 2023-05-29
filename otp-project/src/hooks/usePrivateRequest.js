@@ -11,7 +11,7 @@ const usePrivateRequest = () => {
     const requestInterceptor = privateRequest.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${access_token}`;
+          config.headers["Authorization"] = `Bearer ${"access_token"}`;
         }
         return config;
       },

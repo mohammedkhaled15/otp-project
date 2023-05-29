@@ -68,7 +68,6 @@ const CheckOtp = () => {
         document.cookie = `access_token=${accessToken}; expires=${now.toUTCString()}; httpOnly: true`;
       }
       navigate('/profile');
-      // console.log(res)
       if (res.status === 200) {
         setCurrentUser({ ...res.data.data })
         navigate("/profile")

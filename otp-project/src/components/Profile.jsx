@@ -6,14 +6,11 @@ const Profile = () => {
 
   const [dummyData, setDummyData] = useState("")
 
-  // const { auth } = useContext(LoginAuthContext)
-  // console.log(auth)
   const privateRequest = usePrivateRequest()
 
   const getUserData = async () => {
     const res = await privateRequest.post("/user/details")
     setDummyData(res?.data?.data)
-    // console.log(res.data?.data)
   }
   return (
     <div>
