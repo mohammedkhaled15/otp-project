@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useState } from "react"
 import usePrivateRequest from "../hooks/usePrivateRequest"
 // import LoginAuthContext from "../context/LoginAuthProvider"
 
@@ -9,8 +9,12 @@ const Profile = () => {
   const privateRequest = usePrivateRequest()
 
   const getUserData = async () => {
-    const res = await privateRequest.post("/user/details")
-    setDummyData(res?.data?.data)
+    try {
+      const res = await privateRequest.post("/user/details")
+      setDummyData(res?.data?.data)
+    } catch (error) {
+      // console.log(error)
+    }
   }
   return (
     <div>

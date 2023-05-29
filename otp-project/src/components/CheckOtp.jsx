@@ -5,11 +5,12 @@ import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
 import LoginAuthContext from "../context/LoginAuthProvider"
+import setCookies from "../utils/setCookies"
 
 const CheckOtp = () => {
 
-  const { handleChange, data, baseUrl, setCurrentUser } = useContext(AppContext)
-  const { setAuth, auth } = useContext(LoginAuthContext);
+  const { handleChange, data } = useContext(AppContext)
+  const { setAuth } = useContext(LoginAuthContext);
 
   const [timer, setTimer] = useState(6)
   const [disabled, setDisabled] = useState(true)
@@ -33,7 +34,7 @@ const CheckOtp = () => {
   const handleGetOtp = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post(`${baseUrl}/api/login`, {
+      const res = await publicRequest.post(`/login`, {
         ...data
       })
       if (res.code === 200) {
@@ -53,24 +54,20 @@ const CheckOtp = () => {
   const handleFullLogin = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post(`${baseUrl}/api/check/code`, {
+      const res = await publicRequest.post(`/check/code`, {
         ...data
       })
       const { access_token, name, telephone } = res.data.data
-      console.log(res)
+      // console.log(res)
       const dbUpdate = await axios.post("http://localhost:5000/api/updatedb", { access_token, name, telephone })
       const accessToken = res.data.data.access_token;
-      console.log(accessToken)
+      // console.log(accessToken)
       setAuth({ ...res.data.data })
       const tokenMatch = document.cookie.match(/access_token=([^;]+)/);
       if (!tokenMatch) {
-        const now = new Date();
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000); // Expiration time , should be weeks i will edit later
-        document.cookie = `access_token=${accessToken}; expires=${now.toUTCString()}; httpOnly: true`;
+        setCookies(accessToken, 24 * 60 * 60 * 1000)
       }
-      navigate('/profile');
       if (res.status === 200) {
-        setCurrentUser({ ...res.data.data })
         navigate("/profile")
       }
     } catch (error) {

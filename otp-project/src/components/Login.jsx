@@ -1,14 +1,14 @@
-import axios from "axios"
 import { useContext } from "react"
 import { AppContext } from "../App"
 import { useNavigate } from "react-router-dom"
 import LoginAuthContext from "../context/LoginAuthProvider"
+import { publicRequest } from "../requests/requestMethods"
 
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const { handleChange, baseUrl, data } = useContext(AppContext)
+  const { handleChange, data } = useContext(AppContext)
 
   const { setAuth } = useContext(LoginAuthContext);
 
@@ -20,8 +20,7 @@ const Login = () => {
 
     if (isValidNumber) {
       try {
-        // setLoading(false);
-        const response = await axios.post(`${baseUrl}/api/login`, { telephone: data.telephone })
+        const response = await publicRequest.post(`/login`, { telephone: data.telephone })
         console.log('API Response:', response);
         setAuth({ phoneNumber: data.telephone });
         navigate('/otp', { state: { telephone: data.telephone } });
