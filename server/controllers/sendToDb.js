@@ -15,12 +15,6 @@ const sendToDb = async (req, res) => {
         { ...userData }
       );
     }
-    // res.cookie("access_token", userData.access_token, {
-    //   httpOnly: true,
-    //   sameSite: "None",
-    //   secure: true,
-    //   maxAge: 24 * 60 * 60 * 1000,
-    // });
     return res.status(201).json({ message: `User Data Updated` });
   } catch (error) {
     console.log(error);
