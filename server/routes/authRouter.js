@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const sendToDb = require("../controllers/sendToDb");
-const createJWT = require("../controllers/createJwt");
-const getAccessToken = require("../controllers/getAtFromDb");
+const authController = require("../controllers/authController");
+const userInfoController = require("../controllers/userInfoController");
+const orderListController = require("../controllers/orderListController");
+const getAccessTokenFromDb = require("../middleware/getAccessTokenFromDb");
+const orderDetailsController = require("../controllers/orderDetailsController");
 
-router.post("/updatedb", sendToDb);
-router.post("/createjwt", createJWT);
-router.post("/getAccess", getAccessToken);
+router.post("/auth", authController);
+router.post("/user/Info", getAccessTokenFromDb, userInfoController);
+router.post("/orders_list", getAccessTokenFromDb, orderListController);
+router.post("/order_details", getAccessTokenFromDb, orderDetailsController);
 
 module.exports = router;
