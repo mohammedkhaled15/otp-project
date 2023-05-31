@@ -20,6 +20,14 @@ const sendToDb = async (req, res) => {
       if (!alreadyExistUser) {
         await User.create({ telephone, code, access_token });
         return res.status(201).json({ message: `New User Data Created` });
+      } else if (alreadyExistUser) {
+        const serverAccessToken = jwt.sign(
+          { telephone, code },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
+        );
       } else {
         await User.findByIdAndUpdate(
           { _id: alreadyExistUser._id },
