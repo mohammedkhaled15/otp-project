@@ -9,14 +9,14 @@ const orderDetailsController = async (req, res) => {
       .json({ message: "Not Authorized from Internal Server" });
   try {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    const ordersRes = await axios.post(
+    const orderDetails = await axios.post(
       "https://apis.refon-loyalty.com/api/order_info",
       { test, final_tracking_number },
       config
     );
-    if (ordersRes.status === 200) {
-      return res.status(200).json(ordersRes.data);
-    } else if (ordersRes.status === 401) {
+    if (orderDetails.status === 200) {
+      return res.status(200).json(orderDetails.data);
+    } else if (orderDetails.status === 401) {
       return res
         .status(401)
         .json({ message: "Not Authorized from External Server" });

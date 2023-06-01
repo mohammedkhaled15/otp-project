@@ -14,7 +14,7 @@ const authController = async (req, res) => {
       const serverAccessToken = jwt.sign(
         { telephone, code },
         process.env.JWT_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: "30d" }
       );
       const { access_token, name } = chkResponse.data.data;
 
