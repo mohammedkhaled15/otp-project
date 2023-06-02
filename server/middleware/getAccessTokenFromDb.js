@@ -3,9 +3,7 @@ const User = require("../models/user");
 const getAccessTokenFromDb = async (req, res, next) => {
   // const { telephone } = req?.body;
   const cookies = req?.cookies;
-  // if (!cookies?.telephone) res.status(401);
   const telephone = cookies.telephone;
-  console.log(telephone);
   if (!telephone)
     return res.status(511).json({ message: "Bad Request to DB Api" });
   try {

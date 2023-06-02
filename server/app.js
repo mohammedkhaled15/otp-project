@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRouter");
 const credentials = require("./middleware/credentials");
 const corsOptions = require("./config/corsOptions");
-const { config } = require("dotenv");
+const cookieEncrypter = require("cookie-encrypter");
 
 connectDB();
 const app = express();
@@ -16,7 +16,8 @@ app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIES_SECRET_KEY));
+app.use(cookieEncrypter(process.env.COOKIES_SECRET_KEY));
 
 app.use("/api", authRouter);
 
