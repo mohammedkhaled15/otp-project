@@ -10,7 +10,12 @@ const getAccessTokenFromDb = require("../middleware/getAccessTokenFromDb");
 const verifyAccessToken = require("../middleware/verifyAccessToken");
 
 router.post("/auth", authController);
-router.post("/user/Info", getAccessTokenFromDb, userInfoController);
+router.post(
+  "/user/Info",
+  verifyAccessToken,
+  getAccessTokenFromDb,
+  userInfoController
+);
 router.post(
   "/orders_list",
   verifyAccessToken,
