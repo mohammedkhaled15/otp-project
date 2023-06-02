@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 //Controllers
+const loginValidationController = require("../controllers/loginValidationController");
 const authController = require("../controllers/authController");
 const userInfoController = require("../controllers/userInfoController");
 const orderListController = require("../controllers/orderListController");
@@ -10,6 +11,7 @@ const logOutController = require("../controllers/logOutController");
 const getAccessTokenFromDb = require("../middleware/getAccessTokenFromDb");
 const verifyAccessToken = require("../middleware/verifyAccessToken");
 
+router.post("/login", loginValidationController);
 router.post("/auth", authController);
 router.post(
   "/user/Info",
