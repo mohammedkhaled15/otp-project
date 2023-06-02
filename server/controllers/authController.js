@@ -16,6 +16,7 @@ const authController = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "30d" }
       );
+
       const { access_token, name } = chkResponse.data.data;
 
       const foundedUserinDb = await User.findOne({ telephone });
@@ -27,6 +28,13 @@ const authController = async (req, res) => {
         await User.create({ telephone, access_token, name });
       }
 
+      res.cookie("telephone", telephone, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: true,
+        sameSite: "None",
+      });
+
       return res
         .status(200)
         .json({ authData: { telephone, name, serverAccessToken } });
@@ -35,10 +43,10 @@ const authController = async (req, res) => {
         .status(401)
         .json({ message: "Not Authorized From The External Server" });
     } else {
-      return res.status(500).json({ message: "Unexpected Server Error" });
+      return res.status(500).json({ message: "Unexpected Server Error1" });
     }
   } catch (error) {
-    return res.status(500).json({ message: "Unexpected Server Error" });
+    return res.status(500).json({ message: error });
   }
 };
 
